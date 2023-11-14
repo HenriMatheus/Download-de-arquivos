@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #txt {
+        width: 200px;
+    }
+
+    #arquivos_para_download {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .imagens {
+        max-width: 200px;
+        max-height: 200px;
+    }
+
+    a {
+        color: white;
+        background-color: gray;
+        max-width: 200px; /* Limite maximo do texto*/
+        overflow: hidden; /* Removendo a barra de rolagem */
+        text-overflow: ellipsis; /* Adicionando "..." ao final do texto */
+        text-decoration: none;
+        border: 3px solid rgb(53, 53, 53);
+        border-radius: 10px;
+        padding: 10px;
+    }
+    </style>
+</head>
+<body>
+    <input type="file" id="arquivo" hidden>
+    <input type="text" id="txt">
+    <button onclick="upload()">Upload</button>
+    <button onclick="add_arquivo()">➕</button>
+    <div id="arquivos_para_download"></div>
+
+    <script>
+        let arquivo = document.querySelector("#arquivo")
+        let txt = document.querySelector("#txt")
+
+        arquivo.addEventListener("change", () => txt.value = arquivo.files[0].name)
+
+        function add_arquivo() {
+            arquivo.click()
+        }
+
+        function upload() {
+            let arquivos_para_download = document.querySelector("#arquivos_para_download")
+            let novo_link = URL.createObjectURL(arquivo.files[0])
+            let img = new Image()
+            
+            img.src = novo_link
+
+            if (/\.(jpg|jpeg|png|gif)$/i.test(arquivo.files[0].name)) {
+                let nova_imagem = document.createElement("img")
+
+                nova_imagem.setAttribute("class", "imagens")
+                nova_imagem.src = novo_link
+                nova_imagem.download = arquivo.files[0].name
+                arquivos_para_download.appendChild(nova_imagem)
+            } else {
+                let novo_arquivo = document.createElement("a")
+
+                novo_arquivo.setAttribute("class", "documentos")
+                novo_arquivo.href = novo_link
+                novo_arquivo.textContent = "⬇" + arquivo.files[0].name
+                novo_arquivo.download = arquivo.files[0].name
+                arquivos_para_download.appendChild(novo_arquivo)
+            }
+
+            txt.value = ""
+            arquivo.value = ""
+        }
+    </script>
+</body>
+</html>
